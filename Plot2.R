@@ -5,36 +5,20 @@
 
 setwd("C:/Data/Ivor/Docs/CPD/DataScience/Exploratory")
 
-housedata <- read.table("./data/household_power_consumption.txt", sep = ";",
-                        header = TRUE, comment.char = "", nrows = 2100000,
-                        colClasses = c("character","character","numeric","numeric","numeric",
-                                       "numeric","numeric","numeric","numeric"),
-                        na.strings = "?")
-
-## Subset for the 2 days we want
-housedata <- subset(housedata, (Date == "1/2/2007") | (Date == "2/2/2007"))
-
-## Combine date and tme character fileds and convert to date/time format
-housedata$datetime <- with(housedata,paste(Date,Time, sep = " "))
-library(lubridate)
-housedata$datetime <- dmy_hms(housedata$datetime)
-
-## Investigate
-head(housedata)
-tail(housedata)
-str(housedata)
-
-## Remove  NAs  (There weren't any anyway!)
-housedata <- housedata[complete.cases(housedata),]
+## Use same R code to create data for all four plots
+## (See gethousedata.R supplied)
+## Check it hasn't been called already
+## and if not call it.
+if(!exists("housedata2d")) source("gethousedata.R")
 
 ## Plot Two
 png("plot2.png") ## Open png device
-par( las = 1)
-with(housedata, plot(datetime, Global_active_power,
+par( las = 0)
+with(housedata2d, plot(datetime, Global_active_power,
                      xlab = "",
                      ylab = "Global Active Power (kilowatts)",
                      type = "l"))
 dev.off()   ## close png device
 
 ## Clean up
-rm(list=ls())
+## rm(list=ls())
